@@ -3,7 +3,7 @@ description: Coursework site
 theme: jekyll-theme-primer
 
 exclude:
-  - node_modules"
+  - "node_modules"
   - "**/node_modules"
   - "**/package.json"
   - "**/package-lock.json"
