@@ -3,8 +3,7 @@ description: Coursework site
 theme: jekyll-theme-primer
 
 exclude:
-  - "Week1/node_modules"
-  - "Week2/node_modules"
+  - node_modules"
   - "**/node_modules"
   - "**/package.json"
   - "**/package-lock.json"
