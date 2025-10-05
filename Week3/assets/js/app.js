@@ -1,17 +1,27 @@
-/******************************************************************************
- * Programming Basics Weekly Assignment - Clicker Game
- * ----------------------------------------------------------------------------
- * Instructions:
- * - This is the starter code for your project.
- * - You are required to complete the tasks as per the guidelines and 
- *   instructions provided.
- * 
- * Good luck!
- ******************************************************************************/
 /**
  * Constant that defines the trophies for each level
  */
 const trophies = ['🍓', '🌽', '🧱', '🐴', '🏆'];
+
+/**
+ * The HTML element, the trophy list
+ */
+const trophiesElement = document.getElementById("trophies");
+
+/**
+ * The treshold needed to unlock every trophy
+ */
+const trophyThresholds = [10, 50, 100, 150, 250];
+
+/**
+ * Constant that defines the playfield for the monsters
+ */
+const playfield = document.getElementById("playfield");
+
+/**
+ * Variable that tracks the amount the user has clicked monsters
+ */
+let clicks = 0;
 
 /**
  * Constant that defines the monsters within this game
@@ -24,18 +34,31 @@ const monsterImages = [
   'assets/img/red_zombie.png'
 ];
 
+/**
+ * This function handles clicks on the monster
+ * 
+ * @param {*} monsterElement 
+ */
+function monsterClicked(monsterElement) {
+  clicks++;
+  moveMonsterRandomly(monsterElement);
+  checkForThrophies();
+}
+
 window.addEventListener('load', onWindowLoad);
 
 /**
  * Event handler callback for the window load event (when the DOM is ready).
  */
 function onWindowLoad() {
-  //TODO replace this TODO with code to initialize the application
+  monsterImages.forEach(monster => {
+    monsterElement = spawnMonster(monster);
 
+    monsterElement.addEventListener("click", function() {
+      monsterClicked(this);
+    })
+  });
 }
-
-// TODO replace this TODO with your own functions and other code
-
 
 /******************************************************************************
  * Helper functions section - below you will find some heper functions. You
@@ -56,7 +79,6 @@ function randomIntBetween(lower, upper) {
 
 /**
  * Returns the maximum possible value of the Left style attribute for a monster.
- * Use this function to relocate a monster properly.
  * 
  * @returns a number representing the maximum possible value of the Left style 
  * attribute for a monster.
@@ -67,11 +89,50 @@ function maxMonsterLeft() {
 
 /**
  * Returns the maximum possible value of the Top style attribute for a monster.
- * Use this function to relocate a monster properly.
  * 
  * @returns a number representing the maximum possible value of the Top style 
  * attribute for a monster.
  */
 function maxMonsterTop() {
-  return window.innerWidth - 250;
+  return window.innerHeight - 250;
+}
+
+/**
+ * Moves the monster to a random position on the screen
+ * 
+ * @param {*} monsterElement the html element of the monster
+ */
+function moveMonsterRandomly(monsterElement) {
+  const randomLeftPosition = randomIntBetween(0, maxMonsterLeft());
+  const randomTopPosition = randomIntBetween(0, maxMonsterTop());
+
+  monsterElement.style.left = `${randomLeftPosition}px`;
+  monsterElement.style.top = `${randomTopPosition}px`;
+}
+
+/**
+ * Spawns the monster within a random place of the screen
+ * 
+ * @param {*} monsterImageSrc the image of the monster to spawn
+ * @returns the HTML element of the monster
+ */
+function spawnMonster(monsterImageSrc) {
+  const imageElement = document.createElement("img");
+  imageElement.src = monsterImageSrc;
+  imageElement.classList.add("playfield_item");
+  playfield.appendChild(imageElement);
+
+  moveMonsterRandomly(imageElement);
+  return imageElement;
+}
+
+/**
+ * Checks if clicks > then a trophythreshold, if so add trophy
+ */
+function checkForThrophies() {
+  if (clicks >= trophyThresholds[0]) {
+    trophiesElement.innerHTML += trophies[0];
+    trophies.shift();
+    trophyThresholds.shift();
+  }
 }
