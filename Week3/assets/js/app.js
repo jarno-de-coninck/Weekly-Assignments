@@ -34,16 +34,6 @@ const monsterImages = [
   'assets/img/red_zombie.png'
 ];
 
-/**
- * This function handles clicks on the monster
- * 
- * @param {*} monsterElement 
- */
-function monsterClicked(monsterElement) {
-  clicks++;
-  moveMonsterRandomly(monsterElement);
-  checkForThrophies();
-}
 
 window.addEventListener('load', onWindowLoad);
 
@@ -85,6 +75,17 @@ function randomIntBetween(lower, upper) {
  */
 function maxMonsterLeft() {
   return window.innerWidth - 265;
+}
+
+/**
+ * This function handles clicks on the monster
+ * 
+ * @param {*} monsterElement 
+ */
+function monsterClicked(monsterElement) {
+  clicks++;
+  moveMonsterRandomly(monsterElement);
+  checkForThrophies();
 }
 
 /**
