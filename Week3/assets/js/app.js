@@ -6,7 +6,7 @@ const trophies = ['🍓', '🌽', '🧱', '🐴', '🏆'];
 /**
  * The HTML element, the trophy list
  */
-const trophiesElement = document.getElementById("trophies");
+const trophyListElement = document.getElementById("trophies");
 
 /**
  * The treshold needed to unlock every trophy
@@ -56,7 +56,7 @@ function onWindowLoad() {
 
     monsterElement.addEventListener("click", function() {
       monsterClicked(this);
-    })
+    });
   });
 }
 
@@ -131,7 +131,10 @@ function spawnMonster(monsterImageSrc) {
  */
 function checkForThrophies() {
   if (clicks >= trophyThresholds[0]) {
-    trophiesElement.innerHTML += trophies[0];
+    const span = document.createElement("span");
+    span.innerHTML = trophies[0];
+    trophyListElement.appendChild(span);
+
     trophies.shift();
     trophyThresholds.shift();
   }
