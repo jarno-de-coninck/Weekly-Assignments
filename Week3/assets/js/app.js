@@ -34,7 +34,6 @@ const monsterImages = [
   'assets/img/red_zombie.png'
 ];
 
-
 window.addEventListener('load', onWindowLoad);
 
 /**
