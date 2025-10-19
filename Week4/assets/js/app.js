@@ -29,7 +29,9 @@ window.addEventListener('load', onWindowLoad);
  */
 function onWindowLoad() {
   loadPlayList();
-  addButtonElement.addEventListener("click", onAddButtonClick);
+  addButtonElement.addEventListener("click", function() {
+    onAddButtonClick();
+  });
 }
 
 /**
@@ -39,14 +41,24 @@ function loadPlayList() {
   playlistElement.innerHTML = "";
   let totalPlaytime = 0;
 
-  quirkyVideoDatabaseObject.videos.sort((videoA, videoB) => videoA.title.localeCompare(videoB.title));
+  database.videos.sort((videoA, videoB) => videoA.title.localeCompare(videoB.title));
   
-  quirkyVideoDatabaseObject.videos.forEach(element => {
+  database.videos.forEach(element => {
     addVideoElementToPlayList(element);
     totalPlaytime += element.duration;
   });
 
   totalAirtimeElement.innerHTML = formatTotalPlaytime(totalPlaytime);
+}
+
+/**
+ * This function clears the input fields
+ */
+function clearInputs() {
+  videoIdInputElement.value = "";
+  artistInputElement.value = "";
+  titleInputElement.value = "";
+  durationInputElement.value = "";
 }
 
 /**
@@ -61,14 +73,11 @@ function onAddButtonClick() {
   if (videoId.length != 11 || artist.length <= 3 || title.length <= 3 || isNaN(duration) || duration == 0) {
     return;
   }
-  
-  videoIdInputElement.value = "";
-  artistInputElement.value = "";
-  titleInputElement.value = "";
-  durationInputElement.value = "";
+
+  clearInputs();
 
   const videoObject = {videoId: videoId, duration: Number(duration), artist: artist, title: title};
-  quirkyVideoDatabaseObject.videos.push(videoObject);
+  database.videos.push(videoObject);
   loadPlayList();
 }
 
@@ -82,12 +91,16 @@ function formatTotalPlaytime(totalPlayTime) {
   const minutes = Math.floor(totalPlayTime % 3600 / 60).toString().padStart(2, "0");
   const seconds = Math.floor(totalPlayTime % 60).toString().padStart(2, "0");
 
-  return `${hours}:${minutes}:${seconds}`;
+  if (Math.floor(totalPlayTime / 3600) >= 1) {
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  return `${minutes}:${seconds}`;
 }
 
 /**
  * this function will make an element for the video object and add it to the playlist
- * @param {*} video the video object to make an element for
+ * @param {*} video this is the video it will add to the playlist
  */
 function addVideoElementToPlayList(video) {
   const videoId = video.videoId;
@@ -101,7 +114,7 @@ function addVideoElementToPlayList(video) {
 
   // The template of the videoBox thingy
   const articleHTML = document.createElement("article");
-  articleHTML.className = "card m-2 p-2"
+  articleHTML.className = "card m-2 p-2";
   articleHTML.innerHTML = `
       <div class="media">
         <div class="media-left">
@@ -112,7 +125,7 @@ function addVideoElementToPlayList(video) {
         <div class="media-content">
           <div class="content">
             <a href="https://youtu.be/${videoId}">
-              <strong>${artist}</strong> ${title}
+              <strong>${artist}</strong> - ${title}
             </a>
           </div>
         </div>
